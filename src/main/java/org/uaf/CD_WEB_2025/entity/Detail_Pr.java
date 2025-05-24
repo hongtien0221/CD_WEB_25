@@ -1,4 +1,5 @@
-package org.uaf.cd_web.entity;
+package org.uaf.CD_WEB_2025.entity;
+
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,7 +40,7 @@ public class Detail_Pr implements Serializable {
     @OneToOne()
     @MapsId
     @JoinColumn(name = "ID_PR",referencedColumnName = "ID_PR")
-    private org.uaf.cd_web.entity.Product product;
+    private org.uaf.CD_WEB_2025.entity.Product product;
 
     public Detail_Pr(String idPr, Date nsx, Date hsd, String brand, String describe, double weight, String origin, Date date_import_pr, int inventory, int conditionPR) {
         this.idPr = idPr;

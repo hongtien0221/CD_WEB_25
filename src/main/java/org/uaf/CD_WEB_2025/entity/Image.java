@@ -1,16 +1,10 @@
 package org.uaf.CD_WEB_2025.entity;
 
-import jakarta.persistence.*;
 
-import java.io.Serializable;
-
-public class Image {
-}
-package org.uaf.cd_web.entity;
 
 import jakarta.persistence.*;
         import lombok.*;
-        import org.uaf.cd_web.services.ProductServiceImp;
+        import org.uaf.CD_WEB_2025.services.ProductServiceImp;
 
 import java.io.Serializable;
 
@@ -25,7 +19,7 @@ public class Image implements Serializable {
 
     @ManyToOne()
     @JoinColumn(name = "ID_PR", referencedColumnName = "ID_PR")
-    private org.uaf.cd_web.entity.Product product;
+    private org.uaf.CD_WEB_2025.entity.Product product;
     @Id
     @Column(name = "ID_IMG")
     private String idImg;
@@ -35,7 +29,7 @@ public class Image implements Serializable {
     private int status;
 
 
-    public Image(org.uaf.cd_web.entity.Product product, String idImg, String fileUrl, int status) {
+    public Image(org.uaf.CD_WEB_2025.entity.Product product, String idImg, String fileUrl, int status) {
         this.product= product;
         this.idImg = idImg;
         this.url = fileUrl;

@@ -1,5 +1,5 @@
 
-package org.uaf.cd_web.entity;
+package org.uaf.CD_WEB_2025.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
