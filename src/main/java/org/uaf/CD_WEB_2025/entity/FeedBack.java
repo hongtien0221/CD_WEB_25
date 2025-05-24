@@ -1,4 +1,4 @@
-package org.uaf.cd_web.entity;
+package org.uaf.CD_WEB_2025.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -35,7 +35,7 @@ public class FeedBack implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PR", insertable=false, updatable=false)
-    private org.uaf.cd_web.entity.Product product;
+    private org.uaf.CD_WEB_2025.entity.Product product;
 
     @ManyToOne
     @JoinColumn(name = "ID_USER", insertable = false, updatable = false)

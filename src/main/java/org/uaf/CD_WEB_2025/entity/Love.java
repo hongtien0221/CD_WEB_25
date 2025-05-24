@@ -1,4 +1,4 @@
-package org.uaf.cd_web.entity;
+package org.uaf.CD_WEB_2025.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -26,7 +26,7 @@ public class Love implements Serializable {
 
     @ManyToOne()
     @JoinColumn(name = "ID_PR", referencedColumnName = "ID_PR", insertable = false, updatable = false)
-    private org.uaf.cd_web.entity.Product product;
+    private org.uaf.CD_WEB_2025.entity.Product product;
 
     @ManyToOne()
     @JoinColumn(name = "ID_USER", referencedColumnName = "ID_USER",insertable=false, updatable=false)

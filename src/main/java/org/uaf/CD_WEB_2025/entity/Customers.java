@@ -1,4 +1,4 @@
-package org.uaf.cd_web.entity;
+package org.uaf.CD_WEB_2025.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ public class Customers implements Serializable {
     private String email;
 
     @OneToOne(mappedBy = "customers", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private org.uaf.cd_web.entity.Contact contact;
+    private org.uaf.CD_WEB_2025.entity.Contact contact;
 
 
     @Override

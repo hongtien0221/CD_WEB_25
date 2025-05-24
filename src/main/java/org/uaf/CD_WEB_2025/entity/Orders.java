@@ -1,9 +1,9 @@
-package org.uaf.cd_web.entity;
+package org.uaf.CD_WEB_2025.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.aspectj.apache.bcel.classfile.Code;
-import org.uaf.cd_web.components.Format;
+import org.uaf.CD_WEB_2025.components.Format;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -26,10 +26,10 @@ public class Orders implements Serializable {
     private User user;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_CODE")
-    private org.uaf.cd_web.entity.Discount discount;
+    private org.uaf.CD_WEB_2025.entity.Discount discount;
     @ManyToOne
     @JoinColumn(name = "ID_CUSTOMERS")
-    private org.uaf.cd_web.entity.Customers customers;
+    private org.uaf.CD_WEB_2025.entity.Customers customers;
     @Column(name = "TIME_ORDERS")
     private LocalDateTime timeOrders;
     @Column(name = "TIME_PICKUP")
@@ -49,7 +49,7 @@ public class Orders implements Serializable {
     public static final int FAILED = 5;               // Giao không thành công
     public static final int CANCELLED = 6;            // Đã hủy
 
-    public Orders(String idOrder, User user, org.uaf.cd_web.entity.Discount discount, org.uaf.cd_web.entity.Customers customers, LocalDateTime timeNow, LocalDateTime timePickup, String note, int status) {
+    public Orders(String idOrder, User user, org.uaf.CD_WEB_2025.entity.Discount discount, org.uaf.CD_WEB_2025.entity.Customers customers, LocalDateTime timeNow, LocalDateTime timePickup, String note, int status) {
         this.idOrders = idOrder;
         this.user = user;
         this.discount = discount;
