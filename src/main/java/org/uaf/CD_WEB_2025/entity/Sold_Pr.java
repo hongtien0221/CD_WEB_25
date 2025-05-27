@@ -47,12 +47,10 @@ public class Sold_Pr implements Serializable {
         return dec.format(this.amount * this.priceHere).replace(',', '.');
     }
 
-
     public String formatTime() {
         return timeSold.getDayOfMonth() + "-" + timeSold.getMonthValue() + "-" + timeSold.getYear() + " "
                 + timeSold.getHour() + ":" + timeSold.getMinute();
     }
-
 
 
 }
