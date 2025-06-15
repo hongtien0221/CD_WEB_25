@@ -16,6 +16,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Product implements Serializable {
     @Id
     @Column(name = "ID_PR")
@@ -29,6 +30,7 @@ public class Product implements Serializable {
     private int price;
     @Column(name = "NAME_PR")
     private String namePr;
+
 
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Detail_Pr detailPr;
