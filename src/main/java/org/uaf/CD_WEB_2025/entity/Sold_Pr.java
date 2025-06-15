@@ -18,11 +18,12 @@ import java.util.List;
 public class Sold_Pr implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private int id;
+    @Column(name = "id")
+    private Integer id;
     @ManyToOne
-    @JoinColumn(name = "ID_PR", insertable = false, updatable = false)
+    @JoinColumn(name = "ID_PR")
     private Product product;
+
     @Column(name = "TIME_SOLD")
     private LocalDateTime timeSold;
     @Column(name = "AMOUNT")

@@ -17,6 +17,7 @@ import java.util.List;
 
 @Controller
 public class ListProduct {
+
     private final ProductServiceImp productServiceImp;
     private final DiscountServiceImp discountServiceImp;
 
@@ -27,42 +28,42 @@ public class ListProduct {
     }
 
     @RequestMapping(value = "/listProduct")
-    public String showListProduct(Model model, HttpSession session,
-                                  @RequestParam(value = "page",defaultValue = "1") Integer pages,
-                                  @RequestParam("kind") String kind,
-                                  @RequestParam(value = "sort") String sort,
-                                  @RequestParam(value = "sortDir") String sortDir,
+    public String showListProduct(Model model,
+                                  HttpSession session,
+                                  @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                  @RequestParam(value = "kind", required = false, defaultValue = "") String kind,
+                                  @RequestParam(value = "sort", required = false, defaultValue = "discount") String sort,
+                                  @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir,
                                   @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
+
         User user = (User) session.getAttribute("auth");
         List<Product> loveList = null;
-        Page<Product> page;
-        System.out.println("Kind: " + kind);  //
-        // Ensure page is within valid range
+        Page<Product> pageResult;
 
         try {
-            page = productServiceImp.listAllPr(pages, sort, sortDir, kind);
+            pageResult = productServiceImp.listAllPr(page, sort, sortDir, kind);
         } catch (Exception e) {
             e.printStackTrace();
-            // Add some error handling here
-            page = Page.empty();
+            pageResult = Page.empty();
         }
-
-        List<Discount> listDiscount = discountServiceImp.getListDiscount();
-        List<Product> getListPrDiscount = productServiceImp.getListPrDiscount();
 
         if (user != null) {
             loveList = productServiceImp.listLikeProduct(user.getIdUser());
         }
 
-        model.addAttribute("listPr", page.getContent());
+        List<Product> discountProducts = productServiceImp.getListPrDiscount();
+
+        // Gửi dữ liệu ra view
+        model.addAttribute("listPr", pageResult.getContent());
         model.addAttribute("listlike", loveList);
-        model.addAttribute("listDiscount", getListPrDiscount);
-        model.addAttribute("pageCurrent", pages);
-        model.addAttribute("total", page.getTotalPages());
+        model.addAttribute("listDiscount", discountProducts);
+        model.addAttribute("pageCurrent", page);
+        model.addAttribute("total", pageResult.getTotalPages());
         model.addAttribute("user", user);
         model.addAttribute("sort", sort);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("kind", kind);
         model.addAttribute("keyword", keyword);
-//        model.addAttribute("pageKind", pageKind);
 
         return "list_product";
     }
