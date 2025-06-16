@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.uaf.CD_WEB_2025.entity.Social;
 import org.springframework.web.multipart.MultipartFile;
 import org.uaf.CD_WEB_2025.components.ImportFormExcel;
+import org.uaf.CD_WEB_2025.entity.Social;
 import org.uaf.CD_WEB_2025.entity.User;
 import org.uaf.CD_WEB_2025.reponsitory.SocialReponesitory;
 import org.uaf.CD_WEB_2025.reponsitory.UserReponesitory;
@@ -22,180 +21,169 @@ import java.util.List;
 
 @Service
 public class UserServiceImp implements IUserService {
-    private final UserReponesitory userReponesitory;
-    private BCryptPasswordEncoder passwordEncoder;
-    private final SocialReponesitory socialReponesitory;
+
+    private final UserReponesitory userRepository;
+    private final SocialReponesitory socialRepository;
 
     @Autowired
-    public UserServiceImp(UserReponesitory userReponesitory, SocialReponesitory socialReponesitory) {
-        this.userReponesitory = userReponesitory;
-        this.socialReponesitory = socialReponesitory;
+    public UserServiceImp(UserReponesitory userRepository, SocialReponesitory socialRepository) {
+        this.userRepository = userRepository;
+        this.socialRepository = socialRepository;
     }
 
     @Override
     public List<User> getListUser() {
-        List<User> listUsers = userReponesitory.findAll();
-        return listUsers;
+        return userRepository.findAll();
     }
 
     @Override
     public long getCountUser() {
-        return userReponesitory.count();
+        return userRepository.count();
     }
 
     @Override
     public List<User> getUserById(String id) {
-        return userReponesitory.getUserByIdUser(id);
+        return userRepository.getUserByIdUser(id);
     }
 
     @Override
     public void createUser(User user) {
-
+        userRepository.save(user);
     }
 
     @Override
     public int getMaxId() {
-        return userReponesitory.getMaxID();
+        return userRepository.getMaxID();
     }
 
     @Override
     public void createUser(String name, String phone, String email, String passw) {
-        String importDate = LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonthValue() + "-"
-                + LocalDateTime.now().getDayOfMonth();
+        String importDate = LocalDateTime.now().toLocalDate().toString();
         User u = new User();
-        u.setIdUser("user" + getMaxId() + 1);
+        u.setIdUser("user" + (getMaxId() + 1));
         u.setNameUser(name);
-        u.setDateSignup(Date.valueOf(importDate));
-        u.setEmail(email);
         u.setPhone(phone);
-        u.setDecentralization(0);
+        u.setEmail(email);
         u.setPassw(passw);
-        userReponesitory.save(u);
+        u.setDecentralization(0);
+        u.setDateSignup(Date.valueOf(importDate));
+        userRepository.save(u);
     }
 
     @Override
     @Transactional
     public void updateUser(byte decentralization, String userId) {
-        userReponesitory.updateUser(decentralization, userId);
+        userRepository.updateUser(decentralization, userId);
     }
 
     @Override
-    @Transactional
     public List<User> searchUser(String keyword) {
-        if (keyword.equals(""))
-            return userReponesitory.findAll();
-        return userReponesitory.findUser(keyword);
+        return keyword.isEmpty() ? userRepository.findAll() : userRepository.findUser(keyword);
     }
 
+    @Override
     public User checkLogin(String username) {
-        return userReponesitory.checkLogin(username);
+        return userRepository.findByIdUser(username);
     }
 
     @Override
     public boolean checkUserExit(String email, String phone) {
-        List<User> list = userReponesitory.checkUserExit(email, phone);
-        for (User u : list) {
-            if (email.equals(u.getEmail()) || phone.equals(u.getPhone()))
-                return true;
-        }
-        return false;
+        List<User> list = userRepository.checkUserExit(email, phone);
+        return list.stream().anyMatch(u ->
+                email.equals(u.getEmail()) || phone.equals(u.getPhone()));
     }
 
     @Override
-    public void updateAccount(String iduser, String address, String passw, String name, String phone, String email,
-                              String birthday, Date datesignup, boolean sex) {
+    public void updateAccount(String iduser, String address, String passw, String name, String phone,
+                              String email, String birthday, Date datesignup, boolean sex) {
         User u = new User();
         u.setIdUser(iduser);
         u.setAddress(address);
-        u.setNameUser(name);
-        u.setEmail(email);
-        u.setPhone(phone);
-        u.setDecentralization(0);
         u.setPassw(passw);
+        u.setNameUser(name);
+        u.setPhone(phone);
+        u.setEmail(email);
         u.setBirthday(Date.valueOf(birthday));
         u.setSex(sex);
-        u.setDecentralization(0);
         u.setDateSignup(datesignup);
-        System.out.println(u);
-        userReponesitory.save(u);
-
+        u.setDecentralization(0);
+        userRepository.save(u);
     }
 
     public String getEncryptPassUser(String idUser) {
-        User user = userReponesitory.findById(idUser).orElse(null);
-        return (user != null) ? user.getPassw() : null;
+        return userRepository.findById(idUser)
+                .map(User::getPassw)
+                .orElse(null);
     }
 
     public Date getDateSignup(String idUser) {
-        User user = userReponesitory.findById(idUser).orElse(null);
-        return (user != null) ? user.getDateSignup() : null;
+        return userRepository.findById(idUser)
+                .map(User::getDateSignup)
+                .orElse(null);
     }
 
     @Override
     public List<User> getNewbie() {
-        return userReponesitory.getNewbie(LocalDateTime.now().getMonthValue());
+        return userRepository.getNewbie(LocalDateTime.now().getMonthValue());
     }
 
     @Override
     public User getUserByIdUser(String idUser) {
-        return userReponesitory.findUserByIdUser(idUser);
+        return userRepository.findUserByIdUser(idUser);
     }
 
     @Override
     public boolean checkIdAccount(String id) {
-        for (Social s : socialReponesitory.findAll()) {
-            if (id.equals(s.getIdAccount()))
-                return true;
-        }
-        return false;
-
+        return socialRepository.findAll().stream()
+                .anyMatch(s -> id.equals(s.getIdAccount()));
     }
 
     @Override
     public void addUserFB(String name, String idAccount, String email) {
-        String importDate = LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonthValue() + "-"
-                + LocalDateTime.now().getDayOfMonth();
+        String importDate = LocalDateTime.now().toLocalDate().toString();
+        String generatedId = "user" + (getCountUser() + 1);
+
         User u = new User();
-        Social s = new Social();
-        s.setStatus(1);
-        s.setIdUser("user" + getCountUser() + 1);
-        s.setIdAccount(idAccount);
-        u.setIdUser("user" + getCountUser() + 1);
+        u.setIdUser(generatedId);
         u.setNameUser(name);
-        u.setDateSignup(Date.valueOf(importDate));
         u.setEmail(email);
         u.setPhone(null);
-        u.setDecentralization(0);
         u.setPassw(null);
-        userReponesitory.save(u);
+        u.setDecentralization(0);
+        u.setDateSignup(Date.valueOf(importDate));
+
+        Social s = new Social();
+        s.setIdUser(generatedId);
+        s.setIdAccount(idAccount);
+        s.setStatus(1);
+
+        socialRepository.save(s);
+        userRepository.save(u);
     }
 
     @Override
     public User getUserByIdAccount(String idAccount) {
-        return userReponesitory.getUserByIdAccount(idAccount);
+        return userRepository.getUserByIdAccount(idAccount);
     }
 
     @Override
     public List<User> getListEmployee() {
-        return userReponesitory.getListEmployee();
+        return userRepository.getListEmployee();
     }
 
     @Override
     public void saveFromExcel(MultipartFile file) {
         try {
             List<User> users = ImportFormExcel.excelToUser(file.getInputStream());
-            userReponesitory.saveAll(users);
+            userRepository.saveAll(users);
         } catch (IOException e) {
-            System.out.println("fail to store excel data: " + e.getMessage());
-            throw new RuntimeException("fail to store excel data: " + e.getMessage());
+            throw new RuntimeException("Lỗi đọc file Excel: " + e.getMessage());
         }
     }
 
     @Override
     public Page<User> getListUserPage(int pageNo) {
         Pageable pageable = PageRequest.of(pageNo - 1, 10);
-        return userReponesitory.findAll(pageable);
+        return userRepository.findAll(pageable);
     }
-
-
 }

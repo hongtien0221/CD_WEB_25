@@ -44,5 +44,7 @@ public interface IUserService {
     void saveFromExcel(MultipartFile file);
     Page<User> getListUserPage(int pageNo);
 
+    User checkLogin(String username);
+
     public boolean checkUserExit(String email, String phone);
 }

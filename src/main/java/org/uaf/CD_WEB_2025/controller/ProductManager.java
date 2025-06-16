@@ -38,7 +38,9 @@ public class ProductManager {
     }
 
     @GetMapping("/productManager")
-    public String getListProduct(Model model, HttpSession session) {
+    public String getListProduct(@RequestParam(defaultValue = "1") Integer page,
+                                 Model model,
+                                 HttpSession session) {
         User user = (User) session.getAttribute("auth");
         if (user == null
                 || (user.getDecentralization() != Powers.ADMIN
@@ -46,7 +48,20 @@ public class ProductManager {
                 || user.getDecentralization() == Powers.BLOCK) {
             return "redirect:/";
         }
-        return searchPrM(model, 1, "", "idPr", "asc", session);
+        // Dùng mặc định để load danh sách sản phẩm lần đầu
+        String keyword = "";
+        String sortField = "idPr";
+        String sortDir = "asc";
+
+        Page<Product> pages = productServiceImp.listAll(page, sortField, sortDir, keyword);
+        model.addAttribute("listProduct", pages.getContent());
+        model.addAttribute("page", page);
+        model.addAttribute("count", pages.getTotalPages());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("keyword", keyword);
+
+        return "manager_product";
     }
 
     @GetMapping("/searchPrM")
