@@ -115,10 +115,11 @@ public class Orders implements Serializable {
         return f.formatDateTimeNow(this.getTimeOrders());
     }
 
-    public Object getUser() {
-        if (this.user == null) return this.customers;
-        return this.user;
-    }
+    public User getUser() {
+        return user;
+
+
+}
 
 
 }
