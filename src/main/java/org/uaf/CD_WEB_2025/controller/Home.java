@@ -1,4 +1,4 @@
-package org.uaf.cd_web.controller;
+package org.uaf.CD_WEB_2025.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

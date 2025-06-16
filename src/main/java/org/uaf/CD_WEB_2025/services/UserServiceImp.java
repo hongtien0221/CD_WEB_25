@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.uaf.CD_WEB_2025.components.Encryption;
 import org.uaf.CD_WEB_2025.components.ImportFormExcel;
 import org.uaf.CD_WEB_2025.entity.Social;
 import org.uaf.CD_WEB_2025.entity.User;
@@ -57,6 +58,7 @@ public class UserServiceImp implements IUserService {
     }
 
     @Override
+
     public void createUser(String name, String phone, String email, String passw) {
         String importDate = LocalDateTime.now().toLocalDate().toString();
         User u = new User();
@@ -64,11 +66,12 @@ public class UserServiceImp implements IUserService {
         u.setNameUser(name);
         u.setPhone(phone);
         u.setEmail(email);
-        u.setPassw(passw);
+        u.setPassw(Encryption.toSHA1(passw));
         u.setDecentralization(0);
         u.setDateSignup(Date.valueOf(importDate));
         userRepository.save(u);
     }
+
 
     @Override
     @Transactional
@@ -82,9 +85,11 @@ public class UserServiceImp implements IUserService {
     }
 
     @Override
+
     public User checkLogin(String username) {
         return userRepository.findByIdUser(username);
     }
+
 
     @Override
     public boolean checkUserExit(String email, String phone) {
